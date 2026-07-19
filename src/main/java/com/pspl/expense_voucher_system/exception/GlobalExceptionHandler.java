@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,21 @@ public class GlobalExceptionHandler {
 				.collect(Collectors.toList());
 
 		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Validation failed.", request.getRequestURI(), details);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.FORBIDDEN, "Forbidden", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(VoucherNotFoundException.class)
+	public ResponseEntity<ApiErrorResponse> handleVoucherNotFound(VoucherNotFoundException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(VoucherStateException.class)
+	public ResponseEntity<ApiErrorResponse> handleVoucherState(VoucherStateException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage(), request.getRequestURI(), null);
 	}
 
 	@ExceptionHandler(Exception.class)
