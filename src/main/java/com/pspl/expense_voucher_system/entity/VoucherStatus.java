@@ -7,5 +7,6 @@ public enum VoucherStatus {
 	DRAFT,
 	SUBMITTED,
 	APPROVED,
+	PAID,
 	REJECTED
 }

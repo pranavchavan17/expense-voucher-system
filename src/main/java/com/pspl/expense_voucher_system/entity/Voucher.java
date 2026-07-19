@@ -60,6 +60,12 @@ public class Voucher {
 	@Column
 	private LocalDateTime approvalDate;
 
+	@Column
+	private LocalDateTime paymentDate;
+
+	@Column(unique = true, length = 50)
+	private String paymentReference;
+
 	@Column(length = 1000)
 	private String rejectionReason;
 
@@ -78,7 +84,8 @@ public class Voucher {
 
 	public Voucher(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
-			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason, User user,
+			VoucherStatus status, LocalDateTime approvalDate, LocalDateTime paymentDate, String paymentReference,
+			String rejectionReason, User user,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
@@ -91,6 +98,8 @@ public class Voucher {
 		this.amount = amount;
 		this.status = status;
 		this.approvalDate = approvalDate;
+		this.paymentDate = paymentDate;
+		this.paymentReference = paymentReference;
 		this.rejectionReason = rejectionReason;
 		this.user = user;
 		this.createdAt = createdAt;
@@ -183,6 +192,22 @@ public class Voucher {
 
 	public void setApprovalDate(LocalDateTime approvalDate) {
 		this.approvalDate = approvalDate;
+	}
+
+	public LocalDateTime getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(LocalDateTime paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+	public String getPaymentReference() {
+		return paymentReference;
+	}
+
+	public void setPaymentReference(String paymentReference) {
+		this.paymentReference = paymentReference;
 	}
 
 	public String getRejectionReason() {

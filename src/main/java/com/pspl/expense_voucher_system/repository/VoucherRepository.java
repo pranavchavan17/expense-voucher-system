@@ -19,5 +19,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
 	Optional<Voucher> findByIdAndStatus(Long id, VoucherStatus status);
 
+	long countByPaymentReferenceStartingWith(String paymentReferencePrefix);
+
 	boolean existsByVoucherNumber(String voucherNumber);
+
+	boolean existsByPaymentReference(String paymentReference);
 }
