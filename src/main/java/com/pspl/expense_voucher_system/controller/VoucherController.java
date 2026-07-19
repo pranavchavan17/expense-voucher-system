@@ -9,18 +9,8 @@ import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * VoucherController exposes the employee voucher APIs for creation and lifecycle management.
- */
 @RestController
 @RequestMapping("/api/v1/vouchers")
 public class VoucherController {
@@ -32,18 +22,21 @@ public class VoucherController {
 	}
 
 	/**
-	 * Creates a new voucher in DRAFT state for the logged-in employee.
+	 * Creates a new voucher in DRAFT state.
 	 */
 	@PostMapping
-	public ResponseEntity<VoucherResponse> createVoucher(@Valid @RequestBody CreateVoucherRequest request) {
+	public ResponseEntity<VoucherResponse> createVoucher(
+			@Valid @RequestBody CreateVoucherRequest request) {
+
 		VoucherResponse response = voucherService.createVoucher(request);
+
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.location(URI.create("/api/v1/vouchers/" + response.getId()))
 				.body(response);
 	}
 
 	/**
-	 * Returns all vouchers owned by the logged-in employee.
+	 * Returns vouchers of the logged-in employee.
 	 */
 	@GetMapping
 	public ResponseEntity<List<VoucherResponse>> getMyVouchers() {
@@ -51,35 +44,44 @@ public class VoucherController {
 	}
 
 	/**
-	 * Returns a voucher only if it belongs to the logged-in employee.
+	 * Returns voucher details.
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<VoucherResponse> getVoucherById(@PathVariable Long id) {
+	public ResponseEntity<VoucherResponse> getVoucherById(
+			@PathVariable("id") Long id) {
+
 		return ResponseEntity.ok(voucherService.getVoucherById(id));
 	}
 
 	/**
-	 * Updates a voucher only while it is still in DRAFT state.
+	 * Updates a draft voucher.
 	 */
 	@PutMapping("/{id}")
-	public ResponseEntity<VoucherResponse> updateVoucher(@PathVariable Long id, @Valid @RequestBody UpdateVoucherRequest request) {
+	public ResponseEntity<VoucherResponse> updateVoucher(
+			@PathVariable("id") Long id,
+			@Valid @RequestBody UpdateVoucherRequest request) {
+
 		return ResponseEntity.ok(voucherService.updateVoucher(id, request));
 	}
 
 	/**
-	 * Deletes a voucher only while it is still in DRAFT state.
+	 * Deletes a draft voucher.
 	 */
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteVoucher(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteVoucher(
+			@PathVariable("id") Long id) {
+
 		voucherService.deleteVoucher(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	/**
-	 * Submits a draft voucher and marks it as read-only for the employee.
+	 * Submits a voucher for approval.
 	 */
 	@PutMapping("/{id}/submit")
-	public ResponseEntity<VoucherResponse> submitVoucher(@PathVariable Long id) {
+	public ResponseEntity<VoucherResponse> submitVoucher(
+			@PathVariable("id") Long id) {
+
 		return ResponseEntity.ok(voucherService.submitVoucher(id));
 	}
 }

@@ -178,6 +178,8 @@ public class VoucherServiceImpl implements VoucherService {
 				voucher.getExpenseDescription(),
 				voucher.getAmount(),
 				voucher.getStatus(),
+				voucher.getApprovalDate(),
+				voucher.getRejectionReason(),
 				user != null ? user.getId() : null,
 				user != null ? user.getFullName() : null,
 				user != null ? user.getEmail() : null,

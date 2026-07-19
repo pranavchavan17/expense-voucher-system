@@ -20,6 +20,8 @@ public class VoucherResponse {
 	private String expenseDescription;
 	private BigDecimal amount;
 	private VoucherStatus status;
+	private LocalDateTime approvalDate;
+	private String rejectionReason;
 	private Long employeeId;
 	private String employeeName;
 	private String employeeEmail;
@@ -31,8 +33,8 @@ public class VoucherResponse {
 
 	public VoucherResponse(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
-			VoucherStatus status, Long employeeId, String employeeName, String employeeEmail, LocalDateTime createdAt,
-			LocalDateTime updatedAt) {
+			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason, Long employeeId,
+			String employeeName, String employeeEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
 		this.voucherDate = voucherDate;
@@ -43,6 +45,8 @@ public class VoucherResponse {
 		this.expenseDescription = expenseDescription;
 		this.amount = amount;
 		this.status = status;
+		this.approvalDate = approvalDate;
+		this.rejectionReason = rejectionReason;
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
 		this.employeeEmail = employeeEmail;
@@ -128,6 +132,22 @@ public class VoucherResponse {
 
 	public void setStatus(VoucherStatus status) {
 		this.status = status;
+	}
+
+	public LocalDateTime getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(LocalDateTime approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 
 	public Long getEmployeeId() {

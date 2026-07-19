@@ -57,6 +57,12 @@ public class Voucher {
 	@Column(nullable = false, length = 20)
 	private VoucherStatus status;
 
+	@Column
+	private LocalDateTime approvalDate;
+
+	@Column(length = 1000)
+	private String rejectionReason;
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -72,7 +78,8 @@ public class Voucher {
 
 	public Voucher(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
-			VoucherStatus status, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason, User user,
+			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
 		this.voucherDate = voucherDate;
@@ -83,6 +90,8 @@ public class Voucher {
 		this.expenseDescription = expenseDescription;
 		this.amount = amount;
 		this.status = status;
+		this.approvalDate = approvalDate;
+		this.rejectionReason = rejectionReason;
 		this.user = user;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -166,6 +175,22 @@ public class Voucher {
 
 	public void setStatus(VoucherStatus status) {
 		this.status = status;
+	}
+
+	public LocalDateTime getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(LocalDateTime approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 
 	public User getUser() {
