@@ -12,6 +12,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * GlobalExceptionHandler centralizes JSON error mapping for application-level exceptions.
@@ -56,6 +58,31 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(VoucherStateException.class)
 	public ResponseEntity<ApiErrorResponse> handleVoucherState(VoucherStateException ex, HttpServletRequest request) {
 		return buildResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(ReceiptValidationException.class)
+	public ResponseEntity<ApiErrorResponse> handleReceiptValidation(ReceiptValidationException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(ReceiptNotFoundException.class)
+	public ResponseEntity<ApiErrorResponse> handleReceiptNotFound(ReceiptNotFoundException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(ReceiptStorageException.class)
+	public ResponseEntity<ApiErrorResponse> handleReceiptStorage(ReceiptStorageException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(MissingServletRequestPartException.class)
+	public ResponseEntity<ApiErrorResponse> handleMissingPart(MissingServletRequestPartException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Receipt file is required.", request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ApiErrorResponse> handleMaxUpload(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Receipt file must not exceed 5 MB.", request.getRequestURI(), null);
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -1,6 +1,7 @@
 package com.pspl.expense_voucher_system.controller;
 
 import com.pspl.expense_voucher_system.dto.CreateVoucherRequest;
+import com.pspl.expense_voucher_system.dto.ReceiptFileResponse;
 import com.pspl.expense_voucher_system.dto.UpdateVoucherRequest;
 import com.pspl.expense_voucher_system.dto.VoucherResponse;
 import com.pspl.expense_voucher_system.service.VoucherService;
@@ -8,8 +9,12 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/vouchers")
@@ -83,5 +88,28 @@ public class VoucherController {
 			@PathVariable("id") Long id) {
 
 		return ResponseEntity.ok(voucherService.submitVoucher(id));
+	}
+
+	/**
+	 * Uploads a receipt file for a draft voucher owned by the logged-in employee.
+	 */
+	@PostMapping(value = "/{id}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<VoucherResponse> uploadReceipt(
+			@PathVariable("id") Long id,
+			@RequestPart("receipt") MultipartFile receipt) {
+
+		return ResponseEntity.ok(voucherService.uploadReceipt(id, receipt));
+	}
+
+	/**
+	 * Downloads the stored receipt file for an authorized user.
+	 */
+	@GetMapping("/{id}/receipt")
+	public ResponseEntity<Resource> downloadReceipt(@PathVariable("id") Long id) {
+		ReceiptFileResponse receipt = voucherService.downloadReceipt(id);
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(receipt.getContentType()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + receipt.getFileName() + "\"")
+				.body(receipt.getResource());
 	}
 }

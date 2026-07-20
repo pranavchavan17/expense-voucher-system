@@ -66,6 +66,15 @@ public class Voucher {
 	@Column(unique = true, length = 50)
 	private String paymentReference;
 
+	@Column(length = 255)
+	private String receiptFileName;
+
+	@Column(length = 1024)
+	private String receiptFilePath;
+
+	@Column(length = 100)
+	private String receiptContentType;
+
 	@Column(length = 1000)
 	private String rejectionReason;
 
@@ -85,7 +94,8 @@ public class Voucher {
 	public Voucher(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
 			VoucherStatus status, LocalDateTime approvalDate, LocalDateTime paymentDate, String paymentReference,
-			String rejectionReason, User user,
+			String receiptFileName, String receiptFilePath, String receiptContentType, String rejectionReason,
+			User user,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
@@ -100,6 +110,9 @@ public class Voucher {
 		this.approvalDate = approvalDate;
 		this.paymentDate = paymentDate;
 		this.paymentReference = paymentReference;
+		this.receiptFileName = receiptFileName;
+		this.receiptFilePath = receiptFilePath;
+		this.receiptContentType = receiptContentType;
 		this.rejectionReason = rejectionReason;
 		this.user = user;
 		this.createdAt = createdAt;
@@ -208,6 +221,30 @@ public class Voucher {
 
 	public void setPaymentReference(String paymentReference) {
 		this.paymentReference = paymentReference;
+	}
+
+	public String getReceiptFileName() {
+		return receiptFileName;
+	}
+
+	public void setReceiptFileName(String receiptFileName) {
+		this.receiptFileName = receiptFileName;
+	}
+
+	public String getReceiptFilePath() {
+		return receiptFilePath;
+	}
+
+	public void setReceiptFilePath(String receiptFilePath) {
+		this.receiptFilePath = receiptFilePath;
+	}
+
+	public String getReceiptContentType() {
+		return receiptContentType;
+	}
+
+	public void setReceiptContentType(String receiptContentType) {
+		this.receiptContentType = receiptContentType;
 	}
 
 	public String getRejectionReason() {
