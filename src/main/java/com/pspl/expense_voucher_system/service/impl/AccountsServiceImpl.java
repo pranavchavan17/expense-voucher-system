@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.pspl.expense_voucher_system.entity.User;
 /**
  * AccountsServiceImpl handles the approved-voucher queue and marks vouchers as paid.
  */
@@ -108,6 +108,9 @@ public class AccountsServiceImpl implements AccountsService {
 	}
 
 	private VoucherResponse toVoucherResponse(Voucher voucher) {
+		User user = voucher.getUser();
+		User approvedBy = voucher.getApprovedBy();
+
 		return new VoucherResponse(
 				voucher.getId(),
 				voucher.getVoucherNumber(),
@@ -121,10 +124,24 @@ public class AccountsServiceImpl implements AccountsService {
 				voucher.getStatus(),
 				voucher.getApprovalDate(),
 				voucher.getRejectionReason(),
-				voucher.getUser() != null ? voucher.getUser().getId() : null,
-				voucher.getUser() != null ? voucher.getUser().getFullName() : null,
-				voucher.getUser() != null ? voucher.getUser().getEmail() : null,
+
+				hasSignature(user),
+				hasSignature(approvedBy),
+
+				user != null ? user.getId() : null,
+				user != null ? user.getFullName() : null,
+				user != null ? user.getEmail() : null,
+
 				voucher.getCreatedAt(),
-				voucher.getUpdatedAt());
+				voucher.getUpdatedAt()
+		);
+	}
+
+	private boolean hasSignature(User user) {
+		return user != null
+				&& user.getSignatureFilePath() != null
+				&& !user.getSignatureFilePath().isBlank()
+				&& user.getSignatureFileName() != null
+				&& !user.getSignatureFileName().isBlank();
 	}
 }

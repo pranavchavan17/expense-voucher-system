@@ -65,8 +65,23 @@ public class GlobalExceptionHandler {
 		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request.getRequestURI(), null);
 	}
 
+	@ExceptionHandler(SignatureValidationException.class)
+	public ResponseEntity<ApiErrorResponse> handleSignatureValidation(SignatureValidationException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(SignatureRequiredException.class)
+	public ResponseEntity<ApiErrorResponse> handleSignatureRequired(SignatureRequiredException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage(), request.getRequestURI(), null);
+	}
+
 	@ExceptionHandler(ReceiptNotFoundException.class)
 	public ResponseEntity<ApiErrorResponse> handleReceiptNotFound(ReceiptNotFoundException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request.getRequestURI(), null);
+	}
+
+	@ExceptionHandler(SignatureNotFoundException.class)
+	public ResponseEntity<ApiErrorResponse> handleSignatureNotFound(SignatureNotFoundException ex, HttpServletRequest request) {
 		return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request.getRequestURI(), null);
 	}
 
@@ -75,14 +90,21 @@ public class GlobalExceptionHandler {
 		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage(), request.getRequestURI(), null);
 	}
 
+	@ExceptionHandler(SignatureStorageException.class)
+	public ResponseEntity<ApiErrorResponse> handleSignatureStorage(SignatureStorageException ex, HttpServletRequest request) {
+		return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage(), request.getRequestURI(), null);
+	}
+
 	@ExceptionHandler(MissingServletRequestPartException.class)
 	public ResponseEntity<ApiErrorResponse> handleMissingPart(MissingServletRequestPartException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Receipt file is required.", request.getRequestURI(), null);
+		String message = isSignatureRequest(request) ? "Signature file is required." : "Receipt file is required.";
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", message, request.getRequestURI(), null);
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<ApiErrorResponse> handleMaxUpload(MaxUploadSizeExceededException ex, HttpServletRequest request) {
-		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Receipt file must not exceed 5 MB.", request.getRequestURI(), null);
+		String message = isSignatureRequest(request) ? "Signature file must not exceed 5 MB." : "Receipt file must not exceed 5 MB.";
+		return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", message, request.getRequestURI(), null);
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -92,6 +114,10 @@ public class GlobalExceptionHandler {
 
 	private String formatFieldError(FieldError fieldError) {
 		return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+	}
+
+	private boolean isSignatureRequest(HttpServletRequest request) {
+		return request.getRequestURI() != null && request.getRequestURI().contains("/signature");
 	}
 
 	private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String error, String message, String path, List<String> details) {

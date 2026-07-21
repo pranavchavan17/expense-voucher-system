@@ -2,9 +2,11 @@ package com.pspl.expense_voucher_system.controller;
 
 import com.pspl.expense_voucher_system.dto.CreateVoucherRequest;
 import com.pspl.expense_voucher_system.dto.ReceiptFileResponse;
+import com.pspl.expense_voucher_system.dto.SignatureFileResponse;
 import com.pspl.expense_voucher_system.dto.UpdateVoucherRequest;
 import com.pspl.expense_voucher_system.dto.VoucherResponse;
 import com.pspl.expense_voucher_system.service.VoucherService;
+import com.pspl.expense_voucher_system.service.SignatureService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -21,9 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class VoucherController {
 
 	private final VoucherService voucherService;
+	private final SignatureService signatureService;
 
-	public VoucherController(VoucherService voucherService) {
+	public VoucherController(VoucherService voucherService, SignatureService signatureService) {
 		this.voucherService = voucherService;
+		this.signatureService = signatureService;
 	}
 
 	/**
@@ -111,5 +115,29 @@ public class VoucherController {
 				.contentType(MediaType.parseMediaType(receipt.getContentType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + receipt.getFileName() + "\"")
 				.body(receipt.getResource());
+	}
+
+	/**
+	 * Downloads the employee signature associated with the voucher.
+	 */
+	@GetMapping("/{id}/employee-signature")
+	public ResponseEntity<Resource> downloadEmployeeSignature(@PathVariable("id") Long id) {
+		SignatureFileResponse signature = signatureService.getVoucherEmployeeSignature(id);
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(signature.getContentType()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + signature.getFileName() + "\"")
+				.body(signature.getResource());
+	}
+
+	/**
+	 * Downloads the director signature associated with the voucher.
+	 */
+	@GetMapping("/{id}/director-signature")
+	public ResponseEntity<Resource> downloadDirectorSignature(@PathVariable("id") Long id) {
+		SignatureFileResponse signature = signatureService.getVoucherDirectorSignature(id);
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(signature.getContentType()))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + signature.getFileName() + "\"")
+				.body(signature.getResource());
 	}
 }

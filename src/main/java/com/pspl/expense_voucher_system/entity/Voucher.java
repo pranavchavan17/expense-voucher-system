@@ -78,6 +78,10 @@ public class Voucher {
 	@Column(length = 1000)
 	private String rejectionReason;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "approved_by_user_id")
+	private User approvedBy;
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -95,7 +99,7 @@ public class Voucher {
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
 			VoucherStatus status, LocalDateTime approvalDate, LocalDateTime paymentDate, String paymentReference,
 			String receiptFileName, String receiptFilePath, String receiptContentType, String rejectionReason,
-			User user,
+			User approvedBy, User user,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
@@ -114,6 +118,7 @@ public class Voucher {
 		this.receiptFilePath = receiptFilePath;
 		this.receiptContentType = receiptContentType;
 		this.rejectionReason = rejectionReason;
+		this.approvedBy = approvedBy;
 		this.user = user;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -253,6 +258,14 @@ public class Voucher {
 
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+
+	public User getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(User approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
 	public User getUser() {

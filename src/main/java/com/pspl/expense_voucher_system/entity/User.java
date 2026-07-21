@@ -37,6 +37,15 @@ public class User {
 	@Column(nullable = false)
 	private Role role;
 
+	@Column(length = 255)
+	private String signatureFileName;
+
+	@Column(length = 1024)
+	private String signatureFilePath;
+
+	@Column(length = 100)
+	private String signatureContentType;
+
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
@@ -46,12 +55,16 @@ public class User {
 	public User() {
 	}
 
-	public User(Long id, String fullName, String email, String password, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public User(Long id, String fullName, String email, String password, Role role, String signatureFileName,
+			String signatureFilePath, String signatureContentType, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.signatureFileName = signatureFileName;
+		this.signatureFilePath = signatureFilePath;
+		this.signatureContentType = signatureContentType;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -94,6 +107,30 @@ public class User {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public String getSignatureFileName() {
+		return signatureFileName;
+	}
+
+	public void setSignatureFileName(String signatureFileName) {
+		this.signatureFileName = signatureFileName;
+	}
+
+	public String getSignatureFilePath() {
+		return signatureFilePath;
+	}
+
+	public void setSignatureFilePath(String signatureFilePath) {
+		this.signatureFilePath = signatureFilePath;
+	}
+
+	public String getSignatureContentType() {
+		return signatureContentType;
+	}
+
+	public void setSignatureContentType(String signatureContentType) {
+		this.signatureContentType = signatureContentType;
 	}
 
 	public LocalDateTime getCreatedAt() {

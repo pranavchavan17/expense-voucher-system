@@ -22,6 +22,8 @@ public class VoucherResponse {
 	private VoucherStatus status;
 	private LocalDateTime approvalDate;
 	private String rejectionReason;
+	private boolean employeeSignatureAvailable;
+	private boolean directorSignatureAvailable;
 	private Long employeeId;
 	private String employeeName;
 	private String employeeEmail;
@@ -33,7 +35,8 @@ public class VoucherResponse {
 
 	public VoucherResponse(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
-			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason, Long employeeId,
+			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason,
+			boolean employeeSignatureAvailable, boolean directorSignatureAvailable, Long employeeId,
 			String employeeName, String employeeEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
@@ -47,6 +50,8 @@ public class VoucherResponse {
 		this.status = status;
 		this.approvalDate = approvalDate;
 		this.rejectionReason = rejectionReason;
+		this.employeeSignatureAvailable = employeeSignatureAvailable;
+		this.directorSignatureAvailable = directorSignatureAvailable;
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
 		this.employeeEmail = employeeEmail;
@@ -148,6 +153,22 @@ public class VoucherResponse {
 
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+
+	public boolean isEmployeeSignatureAvailable() {
+		return employeeSignatureAvailable;
+	}
+
+	public void setEmployeeSignatureAvailable(boolean employeeSignatureAvailable) {
+		this.employeeSignatureAvailable = employeeSignatureAvailable;
+	}
+
+	public boolean isDirectorSignatureAvailable() {
+		return directorSignatureAvailable;
+	}
+
+	public void setDirectorSignatureAvailable(boolean directorSignatureAvailable) {
+		this.directorSignatureAvailable = directorSignatureAvailable;
 	}
 
 	public Long getEmployeeId() {

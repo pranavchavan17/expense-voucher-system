@@ -14,6 +14,7 @@ import com.pspl.expense_voucher_system.exception.ReceiptStorageException;
 import com.pspl.expense_voucher_system.exception.VoucherNotFoundException;
 import com.pspl.expense_voucher_system.exception.VoucherStateException;
 import com.pspl.expense_voucher_system.service.FileStorageService;
+import com.pspl.expense_voucher_system.service.SignatureService;
 import com.pspl.expense_voucher_system.repository.UserRepository;
 import com.pspl.expense_voucher_system.repository.VoucherRepository;
 import com.pspl.expense_voucher_system.service.VoucherService;
@@ -47,12 +48,14 @@ public class VoucherServiceImpl implements VoucherService {
 	private final VoucherRepository voucherRepository;
 	private final UserRepository userRepository;
 	private final FileStorageService fileStorageService;
+	private final SignatureService signatureService;
 
 	public VoucherServiceImpl(VoucherRepository voucherRepository, UserRepository userRepository,
-			FileStorageService fileStorageService) {
+			FileStorageService fileStorageService, SignatureService signatureService) {
 		this.voucherRepository = voucherRepository;
 		this.userRepository = userRepository;
 		this.fileStorageService = fileStorageService;
+		this.signatureService = signatureService;
 	}
 
 	/**
@@ -133,6 +136,7 @@ public class VoucherServiceImpl implements VoucherService {
 	@Override
 	public VoucherResponse submitVoucher(Long id) {
 		Voucher voucher = findOwnedVoucher(id);
+		signatureService.ensureCurrentEmployeeHasSignature();
 		ensureDraft(voucher);
 		voucher.setStatus(VoucherStatus.SUBMITTED);
 		return toResponse(voucherRepository.save(voucher));
@@ -286,6 +290,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 	private VoucherResponse toResponse(Voucher voucher) {
 		User user = voucher.getUser();
+		User approvedBy = voucher.getApprovedBy();
 		return new VoucherResponse(
 				voucher.getId(),
 				voucher.getVoucherNumber(),
@@ -299,10 +304,24 @@ public class VoucherServiceImpl implements VoucherService {
 				voucher.getStatus(),
 				voucher.getApprovalDate(),
 				voucher.getRejectionReason(),
+
+				hasSignature(user),
+				hasSignature(approvedBy),
+
 				user != null ? user.getId() : null,
 				user != null ? user.getFullName() : null,
 				user != null ? user.getEmail() : null,
+
 				voucher.getCreatedAt(),
-				voucher.getUpdatedAt());
+				voucher.getUpdatedAt()
+		);
+	}
+
+	private boolean hasSignature(User user) {
+		return user != null
+				&& user.getSignatureFilePath() != null
+				&& !user.getSignatureFilePath().isBlank()
+				&& user.getSignatureFileName() != null
+				&& !user.getSignatureFileName().isBlank();
 	}
 }
