@@ -63,7 +63,7 @@ public class SignatureStorageServiceImpl implements SignatureStorageService {
 	@Override
 	public Resource loadAsResource(String filePath) {
 		try {
-			Path path = Paths.get(filePath).toAbsolutePath().normalize();
+			Path path = resolveReadablePath(filePath);
 			Resource resource = new UrlResource(path.toUri());
 			if (resource.exists() && resource.isReadable()) {
 				return resource;
@@ -78,11 +78,30 @@ public class SignatureStorageServiceImpl implements SignatureStorageService {
 	public void deleteIfExists(String filePath) {
 		try {
 			if (filePath != null) {
-				Files.deleteIfExists(Paths.get(filePath));
+				Files.deleteIfExists(resolveReadablePath(filePath));
 			}
 		} catch (IOException ex) {
 			throw new SignatureStorageException("Unable to delete signature file.", ex);
 		}
+	}
+
+	private Path resolveReadablePath(String filePath) {
+		Path candidate = Paths.get(filePath).toAbsolutePath().normalize();
+		if (Files.exists(candidate)) {
+			return candidate;
+		}
+
+		Path employeeFallback = EMPLOYEE_DIR.resolve(filePath).toAbsolutePath().normalize();
+		if (Files.exists(employeeFallback)) {
+			return employeeFallback;
+		}
+
+		Path directorFallback = DIRECTOR_DIR.resolve(filePath).toAbsolutePath().normalize();
+		if (Files.exists(directorFallback)) {
+			return directorFallback;
+		}
+
+		return candidate;
 	}
 
 	private String resolveExtension(String originalFileName) {

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Building2, Eye, EyeOff, LoaderCircle, Lock, Mail, ShieldCheck } from "lucide-react";
+import { Building2, Eye, EyeOff, Lock, Mail, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
-import Card from "@/components/Card";
+import { Link, Navigate } from "react-router-dom";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -164,6 +163,13 @@ export default function LoginPage() {
                 "Sign In"
               )}
             </Button>
+
+            <p className="text-center text-sm text-slate-600">
+              Don't have an account?{" "}
+              <Link to="/register" className="font-semibold text-brand-600 hover:text-brand-700">
+                Register
+              </Link>
+            </p>
           </form>
         </div>
       </div>

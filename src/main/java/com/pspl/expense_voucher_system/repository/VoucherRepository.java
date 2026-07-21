@@ -3,6 +3,7 @@ package com.pspl.expense_voucher_system.repository;
 import com.pspl.expense_voucher_system.entity.Voucher;
 import com.pspl.expense_voucher_system.entity.VoucherStatus;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,6 +31,8 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
 	long countByStatus(VoucherStatus status);
 
+	long countByStatusIn(Collection<VoucherStatus> statuses);
+
 	@Query("select coalesce(sum(v.amount), 0) from Voucher v where v.user.id = :userId")
 	BigDecimal sumAmountByUserId(@Param("userId") Long userId);
 
@@ -38,6 +41,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
 	@Query("select coalesce(sum(v.amount), 0) from Voucher v where v.status = :status")
 	BigDecimal sumAmountByStatus(@Param("status") VoucherStatus status);
+
+	@Query("select coalesce(sum(v.amount), 0) from Voucher v where v.status in :statuses")
+	BigDecimal sumAmountByStatusIn(@Param("statuses") Collection<VoucherStatus> statuses);
 
 	boolean existsByVoucherNumber(String voucherNumber);
 

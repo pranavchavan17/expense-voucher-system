@@ -60,7 +60,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 	@Override
 	public Resource loadAsResource(String filePath) {
 		try {
-			Path path = Paths.get(filePath).toAbsolutePath().normalize();
+			Path path = resolveReadablePath(filePath);
 			Resource resource = new UrlResource(path.toUri());
 			if (resource.exists() && resource.isReadable()) {
 				return resource;
@@ -78,11 +78,25 @@ public class FileStorageServiceImpl implements FileStorageService {
 	public void deleteIfExists(String filePath) {
 		try {
 			if (filePath != null) {
-				Files.deleteIfExists(Paths.get(filePath));
+				Files.deleteIfExists(resolveReadablePath(filePath));
 			}
 		} catch (IOException ex) {
 			throw new ReceiptStorageException("Unable to delete receipt file.");
 		}
+	}
+
+	private Path resolveReadablePath(String filePath) {
+		Path candidate = Paths.get(filePath).toAbsolutePath().normalize();
+		if (Files.exists(candidate)) {
+			return candidate;
+		}
+
+		Path fallback = uploadRoot.resolve(filePath).toAbsolutePath().normalize();
+		if (Files.exists(fallback)) {
+			return fallback;
+		}
+
+		return candidate;
 	}
 
 	private String resolveExtension(String originalFileName) {

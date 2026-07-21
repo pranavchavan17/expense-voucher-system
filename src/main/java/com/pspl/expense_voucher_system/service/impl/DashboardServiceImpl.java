@@ -11,6 +11,7 @@ import com.pspl.expense_voucher_system.repository.UserRepository;
 import com.pspl.expense_voucher_system.repository.VoucherRepository;
 import com.pspl.expense_voucher_system.service.DashboardService;
 import java.math.BigDecimal;
+import java.util.Set;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,11 +55,13 @@ public class DashboardServiceImpl implements DashboardService {
 	 */
 	@Override
 	public DirectorDashboardResponse getDirectorDashboard() {
+		Set<VoucherStatus> approvedStatuses = Set.of(VoucherStatus.APPROVED, VoucherStatus.PAID);
+
 		return new DirectorDashboardResponse(
 				voucherRepository.countByStatus(VoucherStatus.SUBMITTED),
-				voucherRepository.countByStatus(VoucherStatus.APPROVED),
+				voucherRepository.countByStatusIn(approvedStatuses),
 				voucherRepository.countByStatus(VoucherStatus.REJECTED),
-				safeAmount(voucherRepository.sumAmountByStatus(VoucherStatus.APPROVED)));
+				safeAmount(voucherRepository.sumAmountByStatusIn(approvedStatuses)));
 	}
 
 	/**

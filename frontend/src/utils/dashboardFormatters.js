@@ -11,7 +11,9 @@ export function formatCount(value) {
  * Formats a numeric dashboard amount for display without assuming a currency symbol.
  */
 export function formatAmount(value) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(Number(value ?? 0));

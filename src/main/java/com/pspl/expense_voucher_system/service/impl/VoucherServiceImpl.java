@@ -305,6 +305,7 @@ public class VoucherServiceImpl implements VoucherService {
 				voucher.getApprovalDate(),
 				voucher.getRejectionReason(),
 
+				hasReceipt(voucher),
 				hasSignature(user),
 				hasSignature(approvedBy),
 
@@ -323,5 +324,12 @@ public class VoucherServiceImpl implements VoucherService {
 				&& !user.getSignatureFilePath().isBlank()
 				&& user.getSignatureFileName() != null
 				&& !user.getSignatureFileName().isBlank();
+	}
+
+	private boolean hasReceipt(Voucher voucher) {
+		return voucher.getReceiptFilePath() != null
+				&& !voucher.getReceiptFilePath().isBlank()
+				&& voucher.getReceiptFileName() != null
+				&& !voucher.getReceiptFileName().isBlank();
 	}
 }

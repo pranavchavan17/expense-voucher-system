@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertTriangle, CircleCheckBig, CircleX, RefreshCw, ShieldCheck, Send } from "lucide-react";
 import Card from "@/components/Card";
 import DashboardMetricCard from "@/components/DashboardMetricCard";
 import EmptyState from "@/components/EmptyState";
@@ -45,8 +45,15 @@ export default function DirectorDashboardPage() {
 
     loadDashboard();
 
+    const handleRefresh = () => {
+      loadDashboard();
+    };
+
+    window.addEventListener("dashboard:refresh", handleRefresh);
+
     return () => {
       active = false;
+      window.removeEventListener("dashboard:refresh", handleRefresh);
     };
   }, []);
 
@@ -93,10 +100,10 @@ export default function DirectorDashboardPage() {
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DashboardMetricCard label="Pending Approval Count" value={formatCount(metrics.pendingApprovalCount)} />
-          <DashboardMetricCard label="Approved Count" value={formatCount(metrics.approvedCount)} />
-          <DashboardMetricCard label="Rejected Count" value={formatCount(metrics.rejectedCount)} />
-          <DashboardMetricCard label="Total Approved Amount" value={formatAmount(metrics.totalApprovedAmount)} />
+          <DashboardMetricCard label="Pending Approval Count" value={formatCount(metrics.pendingApprovalCount)} icon={Send} tone="blue" />
+          <DashboardMetricCard label="Approved Count" value={formatCount(metrics.approvedCount)} icon={CircleCheckBig} tone="emerald" />
+          <DashboardMetricCard label="Rejected Count" value={formatCount(metrics.rejectedCount)} icon={CircleX} tone="red" />
+          <DashboardMetricCard label="Total Approved Amount" value={formatAmount(metrics.totalApprovedAmount)} icon={ShieldCheck} tone="brand" />
         </div>
       )}
     </div>

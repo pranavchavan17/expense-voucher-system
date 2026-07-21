@@ -22,6 +22,7 @@ public class VoucherResponse {
 	private VoucherStatus status;
 	private LocalDateTime approvalDate;
 	private String rejectionReason;
+	private boolean receiptAvailable;
 	private boolean employeeSignatureAvailable;
 	private boolean directorSignatureAvailable;
 	private Long employeeId;
@@ -36,7 +37,7 @@ public class VoucherResponse {
 	public VoucherResponse(Long id, String voucherNumber, LocalDate voucherDate, LocalDate expenseDate, String department,
 			String expenseTitle, String expenseCategory, String expenseDescription, BigDecimal amount,
 			VoucherStatus status, LocalDateTime approvalDate, String rejectionReason,
-			boolean employeeSignatureAvailable, boolean directorSignatureAvailable, Long employeeId,
+			boolean receiptAvailable, boolean employeeSignatureAvailable, boolean directorSignatureAvailable, Long employeeId,
 			String employeeName, String employeeEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.voucherNumber = voucherNumber;
@@ -50,6 +51,7 @@ public class VoucherResponse {
 		this.status = status;
 		this.approvalDate = approvalDate;
 		this.rejectionReason = rejectionReason;
+		this.receiptAvailable = receiptAvailable;
 		this.employeeSignatureAvailable = employeeSignatureAvailable;
 		this.directorSignatureAvailable = directorSignatureAvailable;
 		this.employeeId = employeeId;
@@ -153,6 +155,14 @@ public class VoucherResponse {
 
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+
+	public boolean isReceiptAvailable() {
+		return receiptAvailable;
+	}
+
+	public void setReceiptAvailable(boolean receiptAvailable) {
+		this.receiptAvailable = receiptAvailable;
 	}
 
 	public boolean isEmployeeSignatureAvailable() {

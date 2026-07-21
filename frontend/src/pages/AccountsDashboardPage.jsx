@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertTriangle, BadgeDollarSign, RefreshCw, WalletCards } from "lucide-react";
 import Card from "@/components/Card";
 import DashboardMetricCard from "@/components/DashboardMetricCard";
 import EmptyState from "@/components/EmptyState";
@@ -45,8 +45,15 @@ export default function AccountsDashboardPage() {
 
     loadDashboard();
 
+    const handleRefresh = () => {
+      loadDashboard();
+    };
+
+    window.addEventListener("dashboard:refresh", handleRefresh);
+
     return () => {
       active = false;
+      window.removeEventListener("dashboard:refresh", handleRefresh);
     };
   }, []);
 
@@ -92,9 +99,9 @@ export default function AccountsDashboardPage() {
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <DashboardMetricCard label="Pending Payment Count" value={formatCount(metrics.pendingPaymentCount)} />
-          <DashboardMetricCard label="Paid Count" value={formatCount(metrics.paidCount)} />
-          <DashboardMetricCard label="Total Paid Amount" value={formatAmount(metrics.totalPaidAmount)} />
+          <DashboardMetricCard label="Pending Payment Count" value={formatCount(metrics.pendingPaymentCount)} icon={WalletCards} tone="blue" />
+          <DashboardMetricCard label="Paid Count" value={formatCount(metrics.paidCount)} icon={WalletCards} tone="emerald" />
+          <DashboardMetricCard label="Total Paid Amount" value={formatAmount(metrics.totalPaidAmount)} icon={BadgeDollarSign} tone="purple" />
         </div>
       )}
     </div>
